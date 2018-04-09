@@ -13,13 +13,13 @@ return [
     // 数据库类型
     'type'            => 'mysql',
     // 服务器地址
-    'hostname'        => 'localhost',
+    'hostname'        => 'rm-wz9s443254ewc8l484o.mysql.rds.aliyuncs.com',
     // 数据库名
-    'database'        => 'test',
+    'database'        => 'sulvtrip',
     // 用户名
-    'username'        => 'root',
+    'username'        => 'sulvtrip',
     // 密码
-    'password'        => 'admin',
+    'password'        => 'sulvtrip!2017!jjk',
     // 端口
     'hostport'        => '',
     // 连接dsn
