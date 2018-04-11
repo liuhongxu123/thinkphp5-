@@ -1,131 +1,65 @@
 <?php
 namespace app\index\controller;
 use think\Controller;
-use app\index\model\Task;
+use app\index\model\IndexModel;
 class Index extends Controller
 {
-    public function index()
-    {
-        return $this->fetch('list');
-    }
-
-    public function list(){
-        // 查询状态为1的用户数据 并且每页显示10条数据
-//        $list = Task::where('appCode','feizhu')->paginate(1);
-//        echo '<pre>';
-//        return json_encode($list,JSON_UNESCAPED_UNICODE);
+    public function index(){
+        $list = IndexModel::where('appCode','feizhu')->paginate(10);
         // 获取分页显示
-//        $page = $list->render();
+        $room = json_decode(json_encode($list,JSON_UNESCAPED_UNICODE),true);
+        $row = array();
+        foreach($room['data'] as $val){
+            $data = json_decode($val['data'],1);
+            $row = $data['flatOptions'];
+        }
+        $page = $list->render();
         // 模板变量赋值
-//        $this->assign('list', $list);
-//        $this->assign('page', $page);
-
-        $a = '{
-  "total": 800,
-  "rows": [
-    {
-      "id": 0,
-      "name": "Item 0",
-      "price": "$0"
-    },
-    {
-      "id": 1,
-      "name": "Item 1",
-      "price": "$1"
-    },
-    {
-      "id": 2,
-      "name": "Item 2",
-      "price": "$2"
-    },
-    {
-      "id": 3,
-      "name": "Item 3",
-      "price": "$3"
-    },
-    {
-      "id": 4,
-      "name": "Item 4",
-      "price": "$4"
-    },
-    {
-      "id": 5,
-      "name": "Item 5",
-      "price": "$5"
-    },
-    {
-      "id": 6,
-      "name": "Item 6",
-      "price": "$6"
-    },
-    {
-      "id": 7,
-      "name": "Item 7",
-      "price": "$7"
-    },
-    {
-      "id": 8,
-      "name": "Item 8",
-      "price": "$8"
-    },
-    {
-      "id": 9,
-      "name": "Item 9",
-      "price": "$9"
-    },
-    {
-      "id": 10,
-      "name": "Item 10",
-      "price": "$10"
-    },
-    {
-      "id": 11,
-      "name": "Item 11",
-      "price": "$11"
-    },
-    {
-      "id": 12,
-      "name": "Item 12",
-      "price": "$12"
-    },
-    {
-      "id": 13,
-      "name": "Item 13",
-      "price": "$13"
-    },
-    {
-      "id": 14,
-      "name": "Item 14",
-      "price": "$14"
-    },
-    {
-      "id": 15,
-      "name": "Item 15",
-      "price": "$15"
-    },
-    {
-      "id": 16,
-      "name": "Item 16",
-      "price": "$16"
-    },
-    {
-      "id": 17,
-      "name": "Item 17",
-      "price": "$17"
-    },
-    {
-      "id": 18,
-      "name": "Item 18",
-      "price": "$18"
-    },
-    {
-      "id": 19,
-      "name": "Item 19",
-      "price": "$19"
+        $this->assign('row', $row);
+        $this->assign('list', $list);
+        $this->assign('page', $page);
+        return $this->fetch('Index/index');
     }
-  ]
-}';
-    return $a;
+
+    public function edit(){
+        $id = input();
+        $list = IndexModel::where('id',$id['id'])->find();
+        $room = json_decode(json_encode($list,JSON_UNESCAPED_UNICODE),true);
+        $data = json_decode($room['data'],1);
+        $fla = $data['flatOptions'];
+        $ctrip_room = json_decode($room['ctrip_room'],1);
+        $merge = array();
+        foreach($fla as $key=>$val){
+            if(!empty($ctrip_room)){
+                foreach($ctrip_room as $keys=>$value){
+                    if($key == $keys){
+                        $val['ctrip_room'] = $value;
+                        $merge[$key] = $val;
+                    }
+                }
+            }else{
+                $val['ctrip_room'] = '';
+                $merge[$key] = $val;
+            }
+        }
+        $this->assign('data', $merge);
+        $this->assign('list', $list);
+        return $this->fetch('Index/edit');
+    }
+
+    public function update(){
+        $data = input();
+        $fliggy = json_encode($data['fliggy_room'],JSON_FORCE_OBJECT);
+        $ctrip = json_encode($data['ctrip_room'],JSON_FORCE_OBJECT);
+        $task = IndexModel::where('id',$data['id'])->update(['ctrip'=>$data['ctrip'],'ctrip_url'=>$data['ctrip_url'],'fliggy_room'=>$fliggy,'ctrip_room'=>$ctrip]);
+        if($task){
+            //设置成功后跳转页面的地址，默认的返回页面是$_SERVER['HTTP_REFERER']
+            $this->success('更新成功！', 'Index/index','',1);
+        } else {
+            //错误页面的默认跳转页面是返回前一页，通常不需要设置
+            $this->error('更新失败！');
+        }
 
     }
+
 }

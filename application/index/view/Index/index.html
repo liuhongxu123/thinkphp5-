@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>房型-列表</title>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="__STATIC__/bootstrap-table/src/bootstrap-table.css">
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="__STATIC__/bootstrap-table/src/bootstrap-table.js"></script>
+    <script src="__STATIC__/bootstrap-table/src/locale/bootstrap-table-zh-CN.js"></script>
+
+    <style>
+        body{
+            padding:2%;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-default" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                    data-target="#example-navbar-collapse">
+                <span class="sr-only">切换导航</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="{:url('/')}">酒店管理</a>
+        </div>
+        <div class="collapse navbar-collapse" id="example-navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="{:url('/')}">酒店</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<table class="table table-bordered">
+    <caption><h1><b>酒店列表</b></h1></caption>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>飞猪酒店</th>
+        <th>飞猪地址</th>
+        <th>携程酒店</th>
+        <th>携程地址</th>
+        <th>功能</th>
+    </tr>
+    </thead>
+    <tbody>
+    {volist name='list' id='hotel'}
+    <tr>
+        <td>{$hotel.id}</td>
+        <td>{$hotel.hotel_name}</td>
+        <td><a href="{$hotel.__url}" target="_blank">{$hotel.__url}</a></td>
+        <td>{$hotel.ctrip}</td>
+        <td><a href="{$hotel.ctrip_url}" target="_blank">{$hotel.ctrip_url}</a></td>
+        <td><a href="{:url('Index/edit')}?id={$hotel.id}">编辑</a></td>
+    </tr>
+    {/volist}
+    </tbody>
+</table>
+<div style="text-align:right;">{$page}</div>
+
+
+<!--
+<div class="container">
+    <h1>expandRow-collapseRow</h1>
+    <p></p>
+    <div id="toolbar">
+        <button id="button" class="btn btn-default">expandRow</button>
+        <button id="button2" class="btn btn-default">collapseRow</button>
+    </div>
+    <table id="table"
+           data-toggle="table"
+           data-toolbar="#toolbar"
+           data-height="460"
+           data-detail-view="true"
+           data-detail-formatter="detailFormatter"
+           data-pagination="true"
+           data-page-list="[5, 10, 20, 50, 100, 200]"
+           data-url="{:url('room/list')}">
+        <thead>
+        <tr>
+            <th data-field="id">ID</th>
+            <th data-field="name">Item Name</th>
+            <th data-field="price">Item Price</th>
+        </tr>
+        </thead>
+    </table>
+</div>
+<script>
+    var $table = $('#table'),
+        $button = $('#button'),
+        $button2 = $('#button2');
+    $(function () {
+        $button.click(function () {
+            $table.bootstrapTable('expandRow', 1);
+        });
+        $button2.click(function () {
+            $table.bootstrapTable('collapseRow', 1);
+        });
+    });
+    function detailFormatter(index, row) {
+        var html = [];
+        $.each(row, function (key, value) {
+            html.push('<p><b>' + key + ':</b> ' + value + '</p>');
+        });
+        return html.join('');
+    }
+</script>
+-->
+</body>
+</html>
